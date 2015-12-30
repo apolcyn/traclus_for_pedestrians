@@ -27,27 +27,27 @@ class TrajectoryCostTests(unittest.TestCase):
         self.test_trajectories.append(test_object)
         
         points = [(0, 0), (1, 0), (1, 1)]
-        model_cost = math.log(2 * math.sqrt(2.0), 2)
-        encoding_cost = math.log(2 * math.sqrt(2.0), 2)  + math.log(math.sqrt(2.0), 2)
+        model_cost = math.log(math.sqrt(2.0), 2)
+        encoding_cost = math.log(math.sqrt(2.0), 2) + math.log(math.sqrt(2.0), 2)
         test_object = self.build_test_object(points, model_cost, encoding_cost, 0, 2)
         self.test_trajectories.append(test_object)
         
-        points = [(0, 0), (1, 2), (2, 2), (3, 0)]
-        model_cost = math.log(3, 2)
-        encoding_cost = math.log(6.0, 2) + math.log(2 * math.sqrt(3.0), 2)
+        points = [(0, 0), (1, math.sqrt(3.0)), (2, math.sqrt(3.0)), (3, 0)]
+        model_cost = math.log(3.0, 2)
+        encoding_cost = math.log(3.0 * math.sqrt(3.0), 2) + math.log(2 * math.sqrt(3.0), 2)
         test_object = self.build_test_object(points, model_cost, encoding_cost, 0, 3)
         self.test_trajectories.append(test_object)
         
         points = [(0, 0), (1, 0), (1, 1), (1, 2), (2, 2), (3, 2), \
                   (3, 3), (3, 4), (4, 4), (5, 4), (5, 5)]
         model_cost = math.log(3 * math.sqrt(2.0), 2)
-        encoding_cost = math.log(6 * math.sqrt(2.0), 2) + math.log(3 * math.sqrt(2.0), 2)
-        test_object = self.build_test_object(points, model_cost, encoding_cost, 1, 10)
+        encoding_cost = math.log(3 * math.sqrt(2.0), 2) + math.log(3 * math.sqrt(2.0), 2)
+        test_object = self.build_test_object(points, model_cost, encoding_cost, 2, 8)
         self.test_trajectories.append(test_object)
                                 
-        points = [(9, 5), (0, 2), (4, 4), (4, 0)]
+        points = [(9, 5), (0, 2), (2 * math.sqrt(3.0), 4), (2 * math.sqrt(3.0), 0)]
         model_cost = math.log(4.0, 2)
-        encoding_cost = math.log(4 * math.sqrt(3.0), 2) + math.log(16.0 / 3 * math.sqrt(3.0), 2)
+        encoding_cost = math.log(4 * math.sqrt(3.0), 2) + math.log(4.0 * math.sqrt(3.0), 2)
         self.test_trajectories.append(self.build_test_object(points, model_cost, encoding_cost, 1, 3))
         
         points = [(0, 0), (1, 0), (4, 3)]

@@ -36,7 +36,7 @@ class Trajectory(object):
         
         total_perp = 0.0
         total_angular = 0.0
-        for i in xrange(start, end - 1):
+        for i in xrange(start, end):
             line_seg = LineSegment.from_points([self.points[i], self.points[i + 1]])
             total_perp += perpendicular_distance(approximation_line, line_seg)
             total_angular += angular_distance(approximation_line, line_seg)
