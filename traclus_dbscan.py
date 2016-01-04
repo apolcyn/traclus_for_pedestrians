@@ -5,10 +5,14 @@ Created on Dec 31, 2015
 '''
 from dbscan import Cluster, ClusterCandidate
 from planar.line import LineSegment
+from _ctypes import ArgumentError
 
 class TrajectoryLineSegment(ClusterCandidate):
     def __init__(self, line_segment, trajectory_id):
         ClusterCandidate.__init__(self)
+        if line_segment == None or trajectory_id < 0:
+            raise ArgumentError()
+        
         self.line_segment = line_segment
         self.trajectory_id = trajectory_id
 
