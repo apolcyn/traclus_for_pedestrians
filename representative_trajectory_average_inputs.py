@@ -14,7 +14,7 @@ class TrajectoryLineSegmentEndpoint:
         self.line_segment_id = line_segment_id
         self.list_node = list_node
 
-def get_representative_trajectory_average_inputs(trajectory_line_segments, min_lines, min_prev_dist=0.0):
+def get_representative_trajectory_average_inputs(trajectory_line_segments, min_lines, min_prev_dist):
     cur_active = [False] * len(trajectory_line_segments)
     line_segment_endpoints = []
     cur_id = 0
@@ -38,18 +38,22 @@ def get_representative_trajectory_average_inputs(trajectory_line_segments, min_l
         insert_list[:] = []
         delete_list[:] = []
         prev_pos = line_segment_endpoints[i].horizontal_position
-        cur_pos = prev_pos
-        while i < len(line_segment_endpoints) and cur_pos == prev_pos:
+        
+        while i < len(line_segment_endpoints) and line_segment_endpoints[i].horizontal_position == prev_pos:
             if not cur_active[line_segment_endpoints[i].line_segment_id]:
                 insert_list.append(line_segment_endpoints[i])
+                cur_active[line_segment_endpoints[i].line_segment_id] = True
             elif cur_active[line_segment_endpoints[i].line_segment_id]:
-                delete_list.append()
-            cur_pos = line_segment_endpoints[i].horizontal_position
+                delete_list.append(line_segment_endpoints[i])
+                cur_active[line_segment_endpoints[i].line_segment_id] = False
             i += 1
             
         for line_seg in insert_list:
             active_list.add_last_node(line_seg.list_node)
-        out.append({'lines': active_list, 'horizontal_position': prev_pos})
+        temp = []
+        for line_seg in active_list:
+            temp.append(line_seg)
+        out.append({'lines': temp, 'horizontal_position': prev_pos})
         for line_seg in delete_list:
             active_list.remove_node(line_seg.list_node)
     

@@ -64,6 +64,8 @@ class LinkedList:
         self.size += 1
         
     def remove_node(self, new_node):
+        if self.size == 0:
+            raise Exception("trying to remove a node from empty list")
         new_node.next.prev = new_node.prev
         new_node.prev.next = new_node.next
         self.size -= 1
