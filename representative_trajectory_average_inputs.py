@@ -41,17 +41,25 @@ def possibly_append_to_active_list(active_list, out, prev_pos, min_prev_dist, mi
             temp.append(line_seg)
         out.append({'lines': temp, 'horizontal_position': prev_pos})
         
+def line_segments_were_adjacent(trajectory_seg_a, trajectory_seg_b):
+    return trajectory_seg_a.trajectory_id == trajectory_seg_b.trajectory_id and \
+        abs(trajectory_seg_a.position_in_trajectory - trajectory_seg_b.position_in_trajectory) == 1
+    
+def same_trajectory_line_segment_connects(seg, line_seg_endpoint_list):
+    for other in line_seg_endpoint_list:
+        if line_segments_were_adjacent(seg, other.line_segment):
+            return True
+    return False
+        
 def remove_duplicate_points_from_adjacent_lines_of_same_trajectories(active_list, insert_list, delete_list):
-    trajectory_id_insert_set = set()
     insertion_line_seg_set = set()
-    deletion_keeper_list = []
     for endpoint in insert_list:
-        trajectory_id_insert_set.add(endpoint.line_segment.trajectory_id)
         insertion_line_seg_set.add(endpoint.line_segment)
     
+    deletion_keeper_list = []
     for endpoint in delete_list:
-        if endpoint.line_segment.trajectory_id in trajectory_id_insert_set and \
-        not (endpoint.line_segment in insertion_line_seg_set):
+        if (not endpoint.line_segment in insertion_line_seg_set) and \
+        same_trajectory_line_segment_connects(endpoint.line_segment, insert_list):
             active_list.remove_node(endpoint.list_node)
         else:
             deletion_keeper_list.append(endpoint)
@@ -85,7 +93,6 @@ def get_representative_trajectory_average_inputs(trajectory_line_segments, min_l
             
         for line_seg_endpoint in insert_list:
             active_list.add_last_node(line_seg_endpoint.list_node)
-        remove_duplicate_points_from_adjacent_lines_of_same_trajectories(active_list, insert_list, delete_list)
         possibly_append_to_active_list(active_list, out, prev_pos, min_prev_dist, min_lines)
         for line_seg in delete_list:
             active_list.remove_node(line_seg.list_node)

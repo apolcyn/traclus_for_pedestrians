@@ -13,11 +13,13 @@ from unittest import TestSuite
 import random
 
 class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
-    def create_line(self, horizontal_start, horizontal_end, line_set_ids, trajectory_id):
+    def create_line(self, horizontal_start, horizontal_end, line_set_ids, trajectory_id, orig_pos=None):  
+        if orig_pos == None:
+            orig_pos = random.randint(0, 1000)
         return {'trajectory_line_segment': \
-                TrajectoryLineSegment(LineSegment.from_points([Point(horizontal_start, random.randint(0, 10000)), \
-                                                               Point(horizontal_end, random.randint(0, 10000))]), \
-                                      trajectory_id), \
+                TrajectoryLineSegment(LineSegment.from_points([Point(horizontal_start, random.randint(0, 1000)), \
+                                                               Point(horizontal_end, random.randint(0, 1000))]), \
+                                      trajectory_id, orig_pos), \
                 'line_set_ids': line_set_ids}
         
     def create_line_set(self, horizontal_position):
@@ -95,16 +97,15 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
         self.verify(self.build_test_ob(lines,line_sets, 2))
         
     def test_non_adjacent_same_trajectory_segments_overlap(self):
-        lines = [self.create_line(0.0, 2.0, [0], 0), \
-            self.create_line(2.0, 3.0, [1], 0), \
-            self.create_line(3.0, 2.0, [2], 0), \
-            self.create_line(2.0, 5.0, [3, 4], 0)] 
+        lines = [self.create_line(0.0, 2.0, [0, 1], 0), \
+            self.create_line(2.0, 3.0, [1, 2], 0), \
+            self.create_line(3.0, 2.0, [1, 2], 0), \
+            self.create_line(2.0, 5.0, [1, 2, 3], 0)] 
         line_sets = [self.create_line_set(0.0), \
             self.create_line_set(2.0), \
             self.create_line_set(3.0), \
-            self.create_line_set(2.0), \
             self.create_line_set(5.0),]
-        self.verify(self.build_test_ob(lines,line_sets, 2))
+        self.verify(self.build_test_ob(lines,line_sets, 1))
         
     def test_three_lines_required(self):
         lines = [self.create_line(0.0, 2.0, [0], 0), \
@@ -178,25 +179,24 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
         ]
         self.verify(self.build_test_ob(lines,line_sets, 2, min_prev_dist=0.7))
         
-    def test_non_zero_min_prev_dist_and_two_lines_required_and_parallel_trajectories(self):
+    def test_non_zero_min_prev_dist_and_three_lines_required_and_parallel_trajectories(self):
         lines = [self.create_line(0.0, 1.0, [0], 0), \
-            self.create_line(1.0, 1.5, [1], 0), \
-            self.create_line(1.5, 3.0, [], 0), \
-            self.create_line(3.0, 3.7, [2], 0), \
-            self.create_line(3.7, 3.7, [3], 0), \
+            self.create_line(1.0, 1.5, [0], 0), \
+            self.create_line(1.5, 3.0, [1], 0), \
+            self.create_line(3.0, 3.7, [1, 2], 0), \
+            self.create_line(3.7, 3.7, [2], 0), \
         
             self.create_line(0.0, 1.0, [0], 1), \
-            self.create_line(1.0, 1.5, [1], 1), \
-            self.create_line(1.5, 3.0, [], 1), \
-            self.create_line(3.0, 3.7, [2], 1), \
-            self.create_line(3.7, 3.7, [3], 1)
+            self.create_line(1.0, 1.5, [0], 1), \
+            self.create_line(1.5, 3.0, [1], 1), \
+            self.create_line(3.0, 3.7, [1, 2], 1), \
+            self.create_line(3.7, 3.7, [2], 1)
         ]
-        line_sets = [self.create_line_set(0.0), \
-            self.create_line_set(1.0), \
+        line_sets = [self.create_line_set(1.0), \
             self.create_line_set(3.0), \
             self.create_line_set(3.7), \
         ]
-        self.verify(self.build_test_ob(lines,line_sets, 2, min_prev_dist=0.7))
+        self.verify(self.build_test_ob(lines,line_sets, 3, min_prev_dist=0.7))
         
     def test_non_zero_min_prev_dist_and_not_enough_parallel_trajectories(self):
         lines = [self.create_line(0.0, 1.0, [], 0), \
@@ -212,13 +212,13 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
             self.create_line(3.7, 3.7, [], 1)
         ]
         line_sets = []
-        self.verify(self.build_test_ob(lines,line_sets, 3, min_prev_dist=0.7))
+        self.verify(self.build_test_ob(lines,line_sets, 5, min_prev_dist=0.7))
         
     def test_all_one_trajectory(self):
-        lines = [self.create_line(0.0, 2.0, [0], 0), \
-            self.create_line(2.0, 3.0, [1], 0), \
-            self.create_line(3.0, 4.0, [2], 0), \
-            self.create_line(4.0, 8.0, [3, 4], 0)]
+        lines = [self.create_line(0.0, 2.0, [0, 1], 0, 0), \
+            self.create_line(2.0, 3.0, [1, 2], 0, 1), \
+            self.create_line(3.0, 4.0, [2, 3], 0, 2), \
+            self.create_line(4.0, 8.0, [3, 4], 0, 3)]
         line_sets = [self.create_line_set(0.0), \
                      self.create_line_set(2.0), \
                      self.create_line_set(3.0), \
@@ -226,12 +226,15 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
                      self.create_line_set(8.0)]
         self.verify(self.build_test_ob(lines,line_sets, 1))
         
-    def test_same_trajectories_dont_sum_up(self):
-        lines = [self.create_line(0.0, 2.0, [], 0), \
-            self.create_line(2.0, 3.0, [], 0), \
-            self.create_line(3.0, 4.0, [], 0), \
-            self.create_line(4.0, 8.0, [], 0)]
-        line_sets = []
+    def test_same_trajectories_should_still_sum_up(self):
+        lines = [self.create_line(0.0, 2.0, [0], 0, 0), \
+            self.create_line(2.0, 3.0, [0, 1], 0, 1), \
+            self.create_line(3.0, 4.0, [1, 2], 0, 2), \
+            self.create_line(4.0, 8.0, [2], 0, 3)]
+        line_sets = [self.create_line_set(2.0), \
+                     self.create_line_set(3.0), \
+                     self.create_line_set(4.0)]
+        
         self.verify(self.build_test_ob(lines,line_sets, 2))
 
 if __name__ == "__main__":

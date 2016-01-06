@@ -8,13 +8,14 @@ from planar.line import LineSegment
 from _ctypes import ArgumentError
 
 class TrajectoryLineSegment(ClusterCandidate):
-    def __init__(self, line_segment, trajectory_id):
+    def __init__(self, line_segment, trajectory_id, position_in_trajectory):
         ClusterCandidate.__init__(self)
         if line_segment == None or trajectory_id < 0:
             raise ArgumentError()
         
         self.line_segment = line_segment
         self.trajectory_id = trajectory_id
+        self.position_in_trajectory = position_in_trajectory
 
 class TrajectoryCluster(Cluster):
     def __init__(self, num_trajectories_exist):
