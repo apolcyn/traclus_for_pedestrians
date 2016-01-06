@@ -14,9 +14,6 @@ class TrajectoryClusterTests(unittest.TestCase):
         return {'line_segments': line_segments, 'num_trajectories': num_trajectories, \
                 'expected_count': expected_count, 'expected_error': expected_error}
 
-    def new_line_seg(self, traj_id):
-        return TrajectoryLineSegment(LineSegment.from_points([Point(0, 0), Point(1, 1)]), traj_id)
-
     def setUp(self):
         self.test_cases = []
         
