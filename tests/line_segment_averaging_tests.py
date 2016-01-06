@@ -15,6 +15,18 @@ def simple_func(num):
 class LineSegmentAveragingTest(unit_base_tests.UnitBaseTests):    
     def test_bad_input(self):
         self.assertRaises(Exception, number_average, [], simple_func)
+        
+    def verify_iterable_equals_list(self, iter, list):
+        count = 0
+        for item in iter:
+            count += 1
+        
+        self.assertEqual(count, len(list))
+        if count > 0:
+            i = 0
+            for item in iter:
+                self.assertEquals(item, list[i])
+                i += 1
     
     def test_number_averaging_normal(self):
         self.assertEquals(number_average([0.0, 1.0, 2.0, 3, 4, 5], simple_func), 2.5)
@@ -33,16 +45,11 @@ class LineSegmentAveragingTest(unit_base_tests.UnitBaseTests):
             test_ob['lines'].append(lines)
         expected = map(lambda seg: {'horizontal_pos':3, 'lines': seg }, lines)
         
-        i = 0
-        for item in line_segment_averaging_set_generator(test_ob):
-            self.assertEquals(expected[i], item)
-            i += 1
-        
-        self.assertEquals([line_segment_averaging_set_generator(test_ob)], expected)
+        self.verify_iterable_equals_list(line_segment_averaging_set_generator(test_ob), expected)
         
     def test_empty_lines(self):
         test_ob = {'horizontal_position': 4, 'lines': []}
-        self.assertEquals([line_segment_averaging_set_generator(test_ob)], [])
+        self.verify_iterable_equals_list(line_segment_averaging_set_generator(test_ob), [])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
