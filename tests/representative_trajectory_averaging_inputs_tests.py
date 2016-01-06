@@ -178,18 +178,41 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
         ]
         self.verify(self.build_test_ob(lines,line_sets, 2, min_prev_dist=0.7))
         
-    def test_non_zer_min_prev_dist_and_two_lines_required_and_same_traj(self):
+    def test_non_zero_min_prev_dist_and_two_lines_required_and_parallel_trajectories(self):
         lines = [self.create_line(0.0, 1.0, [0], 0), \
-            self.create_line(1.0, 1.5, [], 0), \
+            self.create_line(1.0, 1.5, [1], 0), \
             self.create_line(1.5, 3.0, [], 0), \
-            self.create_line(3.0, 3.7, [1], 0), \
-            self.create_line(3.7, 3.7, [2], 0)
+            self.create_line(3.0, 3.7, [2], 0), \
+            self.create_line(3.7, 3.7, [3], 0), \
+        
+            self.create_line(0.0, 1.0, [0], 1), \
+            self.create_line(1.0, 1.5, [1], 1), \
+            self.create_line(1.5, 3.0, [], 1), \
+            self.create_line(3.0, 3.7, [2], 1), \
+            self.create_line(3.7, 3.7, [3], 1)
         ]
-        line_sets = [self.create_line_set(1.0), \
+        line_sets = [self.create_line_set(0.0), \
+            self.create_line_set(1.0), \
             self.create_line_set(3.0), \
             self.create_line_set(3.7), \
         ]
         self.verify(self.build_test_ob(lines,line_sets, 2, min_prev_dist=0.7))
+        
+    def test_non_zero_min_prev_dist_and_not_enough_parallel_trajectories(self):
+        lines = [self.create_line(0.0, 1.0, [], 0), \
+            self.create_line(1.0, 1.5, [], 0), \
+            self.create_line(1.5, 3.0, [], 0), \
+            self.create_line(3.0, 3.7, [], 0), \
+            self.create_line(3.7, 3.7, [], 0), \
+        
+            self.create_line(0.0, 1.0, [], 1), \
+            self.create_line(1.0, 1.5, [], 1), \
+            self.create_line(1.5, 3.0, [], 1), \
+            self.create_line(3.0, 3.7, [], 1), \
+            self.create_line(3.7, 3.7, [], 1)
+        ]
+        line_sets = []
+        self.verify(self.build_test_ob(lines,line_sets, 3, min_prev_dist=0.7))
         
     def test_all_one_trajectory(self):
         lines = [self.create_line(0.0, 2.0, [0], 0), \
