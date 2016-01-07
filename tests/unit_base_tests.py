@@ -7,10 +7,21 @@ import unittest
 from planar import LineSegment
 from planar import Point
 from traclus_dbscan import TrajectoryLineSegment
+from representative_trajectory_average_inputs import DECIMAL_MAX_DIFF_FOR_EQUALITY
 
 class UnitBaseTests(unittest.TestCase):
-    def create_line_seg(self, traj_id, original_position):
-        return TrajectoryLineSegment(LineSegment.from_points([Point(0, 0), Point(1, 1)]), traj_id, original_position)
+    def create_trajectory_line_seg(self, start, end, traj_id, original_position):
+        return TrajectoryLineSegment(LineSegment.from_points([Point(start[0], start[1]), \
+                                                              Point(start[0], start[1])]), traj_id, original_position)
+        
+    def create_simple_line_seg(self, start, end):
+        return LineSegment.from_points([Point(start[0], start[1]), Point(end[0], end[1])])
+    
+    def verify_lines_almost_equal(self, a, b):
+        self.assertAlmostEquals(a.start.x, b.start.x, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
+        self.assertAlmostEquals(a.start.y, b.start.y, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
+        self.assertAlmostEquals(a.end.x, b.end.x, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
+        self.assertAlmostEquals(a.end.y, b.end.y, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
 
     def verify_iterable_equals_list(self, iterable_ob, list_ob):
         count = 0
