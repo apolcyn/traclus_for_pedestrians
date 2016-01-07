@@ -26,10 +26,6 @@ class GeneratorInitializerTest(UnitBaseTests):
         for item in nums:
             if item in nums_to_keep:
                 yield item
-                
-    def verify_iterable_works_more_than_once(self, iterable, list):
-        self.verify_iterable_equals_list(iterable, list)
-        self.verify_iterable_equals_list(iterable, list)
 
     def test_empty_lists(self):        
         actual = GeneratorInitializer(self.simple_generator, [])

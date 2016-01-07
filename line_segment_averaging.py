@@ -32,10 +32,10 @@ def __line_segment_averaging_set_generator(line_segments_to_average):
 def line_segment_averaging_set_iterable(line_segments_to_average):
     return GeneratorInitializer(__line_segment_averaging_set_generator, line_segments_to_average)
 
-def number_average(iter, func):
+def number_average(iter_ob, func):
     total = 0.0
     count = 0
-    for item in iter:
+    for item in iter_ob:
         total += func(item)
         count += 1
         
@@ -44,11 +44,13 @@ def number_average(iter, func):
     else:
         return total / count
 
-def get_mean_vertical_coordinate_in_line_segments(line_segments, horizontal_coordinate):
+def __get_mean_vertical_coordinate_in_line_segments_generator(line_segments, horizontal_coordinate):
     if line_segments == None or len(line_segments) == 0:
         raise Exception("tried to get the mean value of a non-existanct group of line segments")
-    
-    y_values = 0.0
-    
+        
     for seg in line_segments:
         yield None
+        
+def get_mean_vertical_coordinate_in_line_segments(line_segments, horizontal_coordinate):
+    return GeneratorInitializer(__get_mean_vertical_coordinate_in_line_segments_generator, \
+                                line_segments, horizontal_coordinate)

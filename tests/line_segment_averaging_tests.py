@@ -31,13 +31,13 @@ class LineSegmentAveragingTest(unit_base_tests.UnitBaseTests):
         test_ob = {'horizontal_position':3, 'lines': [] }
         for line in lines:
             test_ob['lines'].append(line)
-        expected = map(lambda seg: {'horizontal_pos':3, 'lines': seg }, lines)
+        expected = map(lambda seg: {'horizontal_pos':3, 'line_seg': seg }, lines)
         
-        self.verify_iterable_equals_list(line_segment_averaging_set_iterable(test_ob), expected)
+        self.verify_iterable_works_more_than_once(line_segment_averaging_set_iterable(test_ob), expected)
         
     def test_empty_lines(self):
         test_ob = {'horizontal_position': 4, 'lines': []}
-        self.verify_iterable_equals_list(line_segment_averaging_set_iterable(test_ob), [])
+        self.verify_iterable_works_more_than_once(line_segment_averaging_set_iterable(test_ob), [])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

@@ -13,6 +13,13 @@ class TrajectoryClusterTests(unittest.TestCase):
     def build_test_object(self, line_segments, expected_count, num_trajectories, expected_error = False):
         return {'line_segments': line_segments, 'num_trajectories': num_trajectories, \
                 'expected_count': expected_count, 'expected_error': expected_error}
+        
+    class Item:
+        def __init__(self, trajectory_id):
+            self.trajectory_id = trajectory_id
+        
+    def new_line_seg(self, trajectory_id):
+        return self.Item(trajectory_id)
 
     def setUp(self):
         self.test_cases = []

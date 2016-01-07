@@ -24,6 +24,10 @@ class UnitBaseTests(unittest.TestCase):
                 self.assertEquals(item, list_ob[i])
                 i += 1
             self.assertEquals(i, count, "wasn't able to iterate over items a second time")
+            
+    def verify_iterable_works_more_than_once(self, iterable, list_ob):
+        self.verify_iterable_equals_list(iterable, list_ob)
+        self.verify_iterable_equals_list(iterable, list_ob)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
