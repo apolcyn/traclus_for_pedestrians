@@ -54,6 +54,12 @@ class RepresentativeLineFindingTests(UnitBaseTests):
         test_ob = self.create_simple_line_seg((0, 1), (1, 2))
         self.assertEquals(rotate_line_segment(test_ob, 0.0), test_ob)
         
+    def test_rotate_by_30(self):
+        before = self.create_simple_line_seg((1, math.sqrt(3.0)), (math.sqrt(3.0), 1))
+        after = self.create_simple_line_seg((math.sqrt(3.0), 1), (2, 0))
+        self.assertTrue(rotate_line_segment(before, -30).almost_equals(after))
+        self.assertTrue(rotate_line_segment(after, 30).almost_equals(before))
+        
     def test_bad_angle(self):
         test_ob = self.create_simple_line_seg((0, 1), (1, 2))
         self.assertRaises(Exception, rotate_line_segment, test_ob, -90.1)

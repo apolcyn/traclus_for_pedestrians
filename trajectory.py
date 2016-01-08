@@ -49,14 +49,7 @@ class Trajectory(object):
         return math.log(total_perp, 2) + math.log(total_angular, 2)
     
     def get_partition(self):
-        return range(0, len(self.points))
-                
-        
-                
-        
-                
-                
-            
+        return range(0, len(self.points))         
     
     def __repr__(self):
         return str(self.points)
