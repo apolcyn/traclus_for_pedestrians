@@ -107,7 +107,18 @@ class PartitionCostComputerTest(unittest.TestCase):
                           seg_iterable_getter, model_cost_computer)
         self.assertRaises(IndexError, partition_cost_computer, segments, 2, 2, seg_iterable_getter, \
                                        partition_line_getter, model_cost_computer, distance_function)
-
+        
+    def test_no_line_segs_provided(self):
+        segments = [1, 3, 5, 7, 9, -2, 3, 4]
+        seg_iterable_getter = lambda l, low, high, func: []
+        model_cost_computer = self.mock_adder_model_cost_computer(lambda num: num * 3)
+        partition_line_getter = self.mock_partition_line_getter(4, 5, 3)
+        distance_function = self.mock_global_dist_func(lambda x, y: None)
+        
+        self.assertRaises(Exception, no_partition_cost_computer, segments, 5, 3, \
+                          seg_iterable_getter, model_cost_computer)
+        self.assertRaises(Exception, partition_cost_computer, segments, 5, 3, seg_iterable_getter, \
+                                       partition_line_getter, model_cost_computer, distance_function)
 
 
 
