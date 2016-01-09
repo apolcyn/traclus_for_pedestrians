@@ -9,7 +9,8 @@ import math
 from planar import LineSegment
 from planar import Point
 from distance_functions import parrallel_distance, perpendicular_distance,\
-    angular_distance
+    angular_distance, get_total_distance_function
+from partitioning.mutable_float import MutableFloat, MutableNumber
         
 class DistanceFunctionTest(unittest.TestCase):
     
@@ -75,6 +76,44 @@ class DistanceFunctionTest(unittest.TestCase):
                             DistanceFunctionTest.DECIMAL_PRECISION, \
                              "incorrect distance measure for " + str(line_pair) + \
                              " found distance of " + str(dist))  
+            
+    def test_total_dist_func(self):
+        perp_func = lambda x, y: x + y
+        angle_dist = lambda x, y: x * y
+        parrallel_dist = lambda x, y: 100 * x + 100 * y
+        
+        total_dist_func = get_total_distance_function(perp_func, angle_dist, parrallel_dist)
+        self.assertEquals(total_dist_func(3, 4), 7 + 12 + 700)
+        self.assertEquals(total_dist_func(7, 5), 12 + 35 + 1200)
+        
+    def total_dist_func_interesting_funcs(self):
+        summer = lambda x, y: x + y
+        multiplier = lambda x, y: x * y
+        def mean_func():
+            total = MutableFloat(0.0)
+            count = MutableNumber(0)
+            def func(num):
+                total.increment(num)
+                count.increment(1)
+                return total.get_val() / count
+        
+        def get_averager(mean_computer):
+            def func(list):
+                map(mean_computer, list)
+            return func
+            
+        averager = mean_func()
+        perp_func = lambda x, y: reduce(summer, x) + reduce(summer, y)
+        angle_func = lambda x, y: get_averager(mean_func())(x) + get_averager(mean_func())(y)
+        parr_func = lambda x, y: reduce(multiplier, x) + reduce(multiplier, y)
+        
+        a = [2, 3, 4]
+        b = [5, 6, 7]
+        total_dist_func = get_total_distance_function(perp_dist_func=perp_func, \
+                                                      angle_dist_func=angle_func, parrallel_dist_func=parr_func)
+        self.assertEquals(total_dist_func(a, b), 9 + 3 + 24 + 18 + 6 + 210)
+        
+        
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

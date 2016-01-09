@@ -18,6 +18,13 @@ def get_shorter_line(line_a, line_b):
         return line_a
     else:
         return line_b
+    
+def get_total_distance_function(perp_dist_func, angle_dist_func, parrallel_dist_func):
+    def __dist_func(line_a, line_b, perp_func=perp_dist_func, angle_func=angle_dist_func, \
+                    parr_func=parrallel_dist_func):
+        return perp_func(line_a, line_b) + angle_func(line_a, line_b) + \
+            parr_func(line_a, line_b)
+    return __dist_func
 
 def perpendicular_distance(line_a, line_b):
     longer_line = get_longer_line(line_a, line_b)

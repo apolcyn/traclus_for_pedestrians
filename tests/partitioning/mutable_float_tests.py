@@ -16,6 +16,11 @@ class MutableFloatTest(unittest.TestCase):
         num.multiply(2)
         self.assertEquals(36, num.get_val())
         
+    def test_bad_val(self):
+        self.assertRaises(Exception, MutableFloat, None)
+        m_float = MutableFloat(0)
+        self.assertRaises(Exception, m_float.set_val, None)
+        
     def test_closurability(self):
         num = MutableFloat(1.0)
         def add(other):
