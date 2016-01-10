@@ -3,8 +3,7 @@ Created on Dec 31, 2015
 
 @author: Alex
 '''
-from dbscan import Cluster, ClusterCandidate
-from planar.line import LineSegment
+from generic_dbscan import Cluster, ClusterCandidate
 from _ctypes import ArgumentError
 
 class TrajectoryLineSegment(ClusterCandidate):

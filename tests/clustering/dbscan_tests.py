@@ -4,10 +4,8 @@ Created on Dec 30, 2015
 @author: Alex
 '''
 import unittest
-import dbscan
 from planar import Point
-from dbscan import ClusterCandidate, ClusterFactory
-from dbscan import dbscan
+from generic_dbscan import ClusterCandidate, ClusterFactory, dbscan
 
 class TestPoint(ClusterCandidate):
     def __init__(self, x, y):

@@ -7,11 +7,8 @@ import unittest
 from tests.unit_base_tests import UnitBaseTests
 from planar import Point
 from partitioning.trajectory_partitioning import call_partition_trajectory
-from partitioning.trajectory_partitioning import partition_trajectory
-from partitioning.trajectory_partitioning import partition_cost_computer
-from partitioning.trajectory_partitioning import no_partition_cost_computer
 
-class Test(UnitBaseTests):
+class SimpleLinePartitioningIntegTest(UnitBaseTests):
 
     def test_simple_line_segment(self):
         trajectory = [Point(0, 0), Point(1, 1)]

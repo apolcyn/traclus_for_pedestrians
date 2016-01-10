@@ -4,7 +4,7 @@ Created on Dec 31, 2015
 @author: Alex
 '''
 import unittest
-from traclus_dbscan import TrajectoryCluster, TrajectoryLineSegment
+from traclus_dbscan.traclus_dbscan import TrajectoryCluster, TrajectoryLineSegment
 from planar.line import LineSegment
 from planar import Point
 

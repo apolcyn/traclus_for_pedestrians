@@ -6,7 +6,7 @@ Created on Jan 6, 2016
 import unittest
 from planar import LineSegment
 from planar import Point
-from traclus_dbscan import TrajectoryLineSegment
+from traclus_dbscan.traclus_dbscan import TrajectoryLineSegment
 from representative_trajectory_average_inputs import DECIMAL_MAX_DIFF_FOR_EQUALITY
 
 class UnitBaseTests(unittest.TestCase):

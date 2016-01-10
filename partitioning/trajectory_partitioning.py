@@ -15,7 +15,7 @@ def call_partition_trajectory(trajectory_point_list):
     if len(trajectory_point_list) < 2:
         raise ValueError("didn't provide a trajectory with enough points")
     
-    distance_function = get_total_distance_function(perpendicular_distance, angular_distance, parrallel_distance)
+    distance_function = lambda x, y: perpendicular_distance(x, y) + angular_distance(x, y)
     partition_from_index_getter = get_partition_from_index_creator(get_line_segment_from_points)
     
     partition_cost_computer_func = part_cost_computer_adapter(part_cost_func=partition_cost_computer, \

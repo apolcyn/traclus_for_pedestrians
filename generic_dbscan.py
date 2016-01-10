@@ -4,7 +4,6 @@ Created on Dec 30, 2015
 @author: Alex
 '''
 import collections
-from argparse import ArgumentError
 
 class ClusterCandidate:
     def __init__(self):
