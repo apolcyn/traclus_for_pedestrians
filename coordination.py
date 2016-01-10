@@ -22,8 +22,6 @@ def _filter_by_indices(good_indices, vals):
                 break
             num_vals = 1
             break
-    if num_vals == 0:
-        raise IndexError("can't pass in empty lists")
             
     max_good_index = 0
     vals_cur_index = 1
@@ -38,7 +36,8 @@ def _filter_by_indices(good_indices, vals):
             else:
                 vals_cur_index += 1
                 
-    if max_good_index != num_vals - 1:
+    if num_vals < 2:
+        raise ValueError("list passed in is too short")
+    elif max_good_index != num_vals - 1:
         raise IndexError("last index is " + str(max_good_index) + \
                          " but there were " + str(num_vals) + " vals")
-

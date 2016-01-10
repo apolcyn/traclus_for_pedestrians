@@ -18,11 +18,16 @@ class Test(UnitBaseTests):
                                line_segment_iterable_getter, model_cost_computer, line_segment_creator):
         return str(low_index) + str(high_index) + line_segment_iterable_getter + model_cost_computer + \
             line_segment_creator
+            
+    def create_mock_distance_func_computer_getter(self, val):
+        def _func():
+            return val
+        return _func
 
     def test_par_cost_adapter(self):
         func = part_cost_computer_adapter(part_cost_func=self.mock_par_cost_func, line_segment_iterable_getter='a', \
                                           partition_line_getter='b', \
-                                          distance_func_computer='d', line_segment_creator='x')
+                                          distance_func_computer_getter=self.create_mock_distance_func_computer_getter('d'), line_segment_creator='x')
         self.assertEquals(func(trajectory_point_list=[1, 2], low_index=0, high_index=1, \
                                model_cost_computer='c'), "01abcdx")
         self.assertEquals(func(trajectory_point_list=[1, 2, 3], low_index=1, high_index=2, \

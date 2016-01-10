@@ -17,6 +17,10 @@ class UnitBaseTests(unittest.TestCase):
     def create_simple_line_seg(self, start, end):
         return LineSegment.from_points([Point(start[0], start[1]), Point(end[0], end[1])])
     
+    def verify_iteration_raises(self, exception_type, iterable):
+        func = lambda x: [h for h in x]
+        self.assertRaises(exception_type, func, iterable)
+    
     def verify_lines_almost_equal(self, a, b):
         self.assertAlmostEquals(a.start.x, b.start.x, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
         self.assertAlmostEquals(a.start.y, b.start.y, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
