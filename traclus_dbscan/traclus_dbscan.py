@@ -3,7 +3,7 @@ Created on Dec 31, 2015
 
 @author: Alex
 '''
-from generic_dbscan import Cluster, ClusterCandidate
+from generic_dbscan import Cluster, ClusterCandidate, ClusterFactory
 from _ctypes import ArgumentError
 
 class TrajectoryLineSegment(ClusterCandidate):
@@ -30,5 +30,9 @@ class TrajectoryCluster(Cluster):
         
     def num_trajectories_contained(self):
         return self.trajectory_count
+    
+class TrajectoryClusterFactory(ClusterFactory):
+    def new_cluster(self):
+        return TrajectoryCluster()
     
     
