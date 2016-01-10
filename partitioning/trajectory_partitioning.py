@@ -11,26 +11,30 @@ from distance_functions import get_total_distance_function,\
 import math
 from partitioning.mutable_float import MutableFloat
 
-def call_partition_trajectory(trajectory_point_list, partition_trajectory_func, par_cost_func, no_par_cost_func):
-    line_seg_iterable_getter = get_trajectory_line_segment_iterator(0, len(trajectory_point_list), \
-                                                                    get_line_segment_from_points)
+def call_partition_trajectory(trajectory_point_list):
+    if len(trajectory_point_list) < 2:
+        raise ValueError("didn't provide a trajectory with enough points")
     
-    model_cost_computer = get_number_list_reducer_that_returns_each_midway_val(individial_line_seg_model_cost_computer)
     distance_function = get_total_distance_function(perpendicular_distance, angular_distance, parrallel_distance)
     partition_from_index_getter = get_partition_from_index_creator(get_line_segment_from_points)
     
-    partition_cost_computer_func = part_cost_computer_adapter(part_cost_func=par_cost_func, \
-                                                              trajectory_point_list=trajectory_point_list, \
-                                                              line_segment_iterable_getter=line_seg_iterable_getter, \
+    partition_cost_computer_func = part_cost_computer_adapter(part_cost_func=partition_cost_computer, \
+                                                              line_segment_iterable_getter=get_trajectory_line_segment_iterator, \
                                                               partition_line_getter=partition_from_index_getter, \
-                                                              model_cost_computer=model_cost_computer, \
-                                                              distance_func_computer=distance_function)
-    no_par_cost_computer_func = no_part_cost_computer_adapter(no_part_cost_func=no_par_cost_func, \
-                                                              trajectory_point_list=trajectory_point_list, \
-                                                              line_segment_iterable_getter=line_seg_iterable_getter, \
-                                                              model_cost_computer=model_cost_computer)
+                                                              distance_func_computer=distance_function, \
+                                                              line_segment_creator=get_line_segment_from_points)
+    no_par_cost_computer_func = no_part_cost_computer_adapter(no_part_cost_func=no_partition_cost_computer, \
+                                                              line_segment_iterable_getter=get_trajectory_line_segment_iterator, \
+                                                              line_segment_creator=get_line_segment_from_points)
     
-    return partition_trajectory_func(trajectory_point_list, partition_cost_computer_func, no_par_cost_computer_func)
+    return partition_trajectory(trajectory_point_list=trajectory_point_list, \
+                                partition_cost_func=partition_cost_computer_func, \
+                                no_partition_cost_func=no_par_cost_computer_func, \
+                                get_model_cost_computer_func=get_model_cost_computer, \
+                                individial_line_seg_model_cost_computer=individual_line_seg_model_cost_computer)
+    
+def get_model_cost_computer(individual_line_segment_cost_computer):
+    return get_number_list_reducer_that_returns_each_midway_val(func=individual_line_segment_cost_computer)
         
 def get_number_list_reducer_that_returns_each_midway_val(func):
     total = MutableFloat(0.0)  
@@ -39,7 +43,7 @@ def get_number_list_reducer_that_returns_each_midway_val(func):
         return total.get_val()
     return _func
     
-def individial_line_seg_model_cost_computer(line_seg):
+def individual_line_seg_model_cost_computer(line_seg):
     if line_seg.length < 1.0:
         raise ValueError
     return math.ceil(math.log(line_seg.length, 2))
@@ -56,34 +60,40 @@ def check_low_high_list_indices(trajectory_point_list, low_index, high_index):
         raise IndexError
 
 def part_cost_computer_adapter(part_cost_func, line_segment_iterable_getter, partition_line_getter, \
-                               model_cost_computer, distance_func_computer):
-    def _func(trajectory_point_list, low_index, high_index):
+                               distance_func_computer, line_segment_creator):
+    def _func(trajectory_point_list, low_index, high_index, model_cost_computer):
         check_low_high_list_indices(trajectory_point_list=trajectory_point_list,\
                                      low_index=low_index, high_index=high_index)
         return part_cost_func(trajectory_point_list, low_index, high_index, \
                               line_segment_iterable_getter=line_segment_iterable_getter, \
                               partition_line_getter=partition_line_getter, \
-                              model_cost_computer=model_cost_computer, distance_func_computer=distance_func_computer)
+                              model_cost_computer=model_cost_computer, \
+                              distance_func_computer=distance_func_computer, \
+                              line_segment_creator=line_segment_creator)
     return _func
 
-def no_part_cost_computer_adapter(no_part_cost_func, line_segment_iterable_getter, model_cost_computer):
-    def _func(trajectory_point_list, low_index, high_index):
+def no_part_cost_computer_adapter(no_part_cost_func, line_segment_iterable_getter, line_segment_creator):
+    def _func(trajectory_point_list, low_index, high_index, model_cost_computer):
         check_low_high_list_indices(trajectory_point_list=trajectory_point_list,\
                                      low_index=low_index, high_index=high_index)
         return no_part_cost_func(trajectory_point_list=trajectory_point_list, low_index=low_index, \
                                  high_index=high_index, line_segment_iterable_getter=line_segment_iterable_getter, \
-                                 model_cost_computer=model_cost_computer)
+                                 model_cost_computer=model_cost_computer, \
+                                 line_segment_creator=line_segment_creator)
     return _func
     
-def partition_trajectory(trajectory_point_list, partition_cost_func, no_partition_cost_func):
+def partition_trajectory(trajectory_point_list, partition_cost_func, no_partition_cost_func, \
+                         get_model_cost_computer_func, individial_line_seg_model_cost_computer):
     low = 0
     high = 2
     partition_indices = []
     partition_indices.append(0)
     
     while high < len(trajectory_point_list):
-        cost_par = partition_cost_func(trajectory_point_list, low, high)
-        cost_no_par = no_partition_cost_func(trajectory_point_list, low, high)
+        cost_par = partition_cost_func(trajectory_point_list, low, high, \
+                                       get_model_cost_computer_func(individial_line_seg_model_cost_computer))
+        cost_no_par = no_partition_cost_func(trajectory_point_list, low, \
+                                             high, get_model_cost_computer_func(individial_line_seg_model_cost_computer))
         
         if cost_par > cost_no_par:
             partition_indices.append(high - 1)
@@ -97,7 +107,8 @@ def partition_trajectory(trajectory_point_list, partition_cost_func, no_partitio
     return partition_indices
 
 def partition_cost_computer(trajectory_point_list, low_index, high_index, line_segment_iterable_getter, \
-                            partition_line_getter, model_cost_computer, distance_func_computer):
+                            partition_line_getter, model_cost_computer, distance_func_computer, \
+                            line_segment_creator):
     if low_index >= high_index:
         raise IndexError("illegal indices to partition func")
     
@@ -105,7 +116,8 @@ def partition_cost_computer(trajectory_point_list, low_index, high_index, line_s
     model_cost = model_cost_computer(partition_line)
     
     encoding_cost = None
-    for line_segment in line_segment_iterable_getter(trajectory_point_list, low_index, high_index, None):
+    for line_segment in line_segment_iterable_getter(trajectory_point_list, low_index, high_index, \
+                                                     line_segment_creator):
         encoding_cost = distance_func_computer(line_segment, partition_line)
         
     if encoding_cost == None:
@@ -114,12 +126,14 @@ def partition_cost_computer(trajectory_point_list, low_index, high_index, line_s
     return model_cost + encoding_cost
 
 def no_partition_cost_computer(trajectory_point_list, low_index, high_index, \
-                               line_segment_iterable_getter, model_cost_computer):
+                               line_segment_iterable_getter, model_cost_computer, \
+                               line_segment_creator):
     if low_index >= high_index:
         raise IndexError("illegal indices to no partition func")
     
     total_cost = None
-    for line_segment in line_segment_iterable_getter(trajectory_point_list, low_index, high_index, None):
+    for line_segment in line_segment_iterable_getter(trajectory_point_list, low_index, high_index, \
+                                                     line_segment_creator):
         total_cost = model_cost_computer(line_segment)
         
     if total_cost == None:
@@ -129,6 +143,12 @@ def no_partition_cost_computer(trajectory_point_list, low_index, high_index, \
 
 def get_line_segment_from_points(point_a, point_b):
     return LineSegment.from_points([point_a, point_b])
+
+def get_trajectory_line_segment_iterator_adapter(iterator_getter, get_line_segment_from_points_func):
+    def _func(list, low, high, get_line_segment_from_points_func=get_line_segment_from_points_func):
+        iterator_getter(list, low, high, get_line_segment_from_points_func)
+    return _func
+        
 
 def get_trajectory_line_segment_iterator(list, low, high, get_line_segment_from_points_func):
     if high <= low:

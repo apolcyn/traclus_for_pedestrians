@@ -24,4 +24,4 @@ class MutableFloat(object):
     
 class MutableNumber(MutableFloat):
     def __init__(self, val):
-        MutableFloat(self, val)
+        MutableFloat.__init__(self, val)
