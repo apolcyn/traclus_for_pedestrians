@@ -16,7 +16,7 @@ def call_partition_trajectory(trajectory_point_list):
         raise ValueError("didn't provide a trajectory with enough points")
     
     cum_dist_getter_func = \
-    cummulative_distance_function_getter(individual_distance_func=lambda x, y: \
+    cummulative_distance_function_getter_adapter(individual_distance_func=lambda x, y: \
                                                                              perpendicular_distance(x, y) + \
                                                                              angular_distance(x, y), \
                                                                              accumulator_func_getter=get_number_list_reducer_that_returns_each_midway_val)
@@ -26,7 +26,7 @@ def call_partition_trajectory(trajectory_point_list):
     partition_cost_computer_func = part_cost_computer_adapter(part_cost_func=partition_cost_computer, \
                                                               line_segment_iterable_getter=get_trajectory_line_segment_iterator, \
                                                               partition_line_getter=partition_from_index_getter, \
-                                                              distance_func_computer=cum_dist_getter_func, \
+                                                              distance_func_computer_getter=cum_dist_getter_func, \
                                                               line_segment_creator=get_line_segment_from_points)
     no_par_cost_computer_func = no_part_cost_computer_adapter(no_part_cost_func=no_partition_cost_computer, \
                                                               line_segment_iterable_getter=get_trajectory_line_segment_iterator, \
