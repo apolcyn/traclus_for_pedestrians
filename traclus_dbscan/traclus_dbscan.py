@@ -44,6 +44,9 @@ class TrajectoryCluster(Cluster):
     def num_trajectories_contained(self):
         return self.trajectory_count
     
+    def get_trajectory_line_segments(self):
+        return self.members
+    
 class TrajectoryClusterFactory(ClusterFactory):
     def new_cluster(self):
         return TrajectoryCluster()

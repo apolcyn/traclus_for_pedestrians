@@ -36,7 +36,6 @@ class GetTrajectoryLineSegmentsFromPointsIterableTest(UnitBaseTests):
         
     def test_no_line_segs(self):
         points = [2, 1]
-        expected_line_segs = [18]
         self.assertRaises(Exception, get_trajectory_line_segments_from_points_iterable, points, \
                           self.MockTrajectoryLineSegFactory, 5, self.mock_partition_func, \
                           self.mock_line_seg_from_points_func)

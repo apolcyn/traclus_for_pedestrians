@@ -68,8 +68,8 @@ def dbscan(cluster_candidates, epsilon, min_neighbors, cluster_factory):
                 for other_item in neighbors:
                     other_item.assign_to_cluster(cur_cluster)
                     cur_cluster.add_member(other_item)
+                    item_queue.append(other_item)
                     
-                item_queue.extend(neighbors)
                 expand_cluster(item_queue, cur_cluster, epsilon, \
                                min_neighbors, cluster_candidates)
                 clusters.append(cur_cluster)
