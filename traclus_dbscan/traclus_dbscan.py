@@ -4,13 +4,18 @@ Created on Dec 31, 2015
 @author: Alex
 '''
 from generic_dbscan import Cluster, ClusterCandidate, ClusterFactory
-from _ctypes import ArgumentError
+
+class TrajectoryLineSegmentFactory():
+    def new_trajectory_line_seg(self, line_segment, trajectory_id):
+        if line_segment == None or trajectory_id == None or trajectory_id < 0:
+            raise Exception("invalid arguments")
+        return TrajectoryLineSegment(line_segment=line_segment, trajectory_id=trajectory_id)
 
 class TrajectoryLineSegment(ClusterCandidate):
-    def __init__(self, line_segment, trajectory_id, position_in_trajectory):
+    def __init__(self, line_segment, trajectory_id, position_in_trajectory=None):
         ClusterCandidate.__init__(self)
         if line_segment == None or trajectory_id < 0:
-            raise ArgumentError()
+            raise Exception
         
         self.line_segment = line_segment
         self.trajectory_id = trajectory_id
