@@ -5,6 +5,17 @@ Created on Jan 5, 2016
 '''
 
 from generator_initializer import GeneratorInitializer
+from representative_trajectory_average_inputs import get_representative_trajectory_average_inputs
+from planar import Point
+
+def get_representative_line_from_trajectory_line_segments(trajectory_line_segments, min_vertical_lines, min_prev_dist):
+    inputs = get_representative_trajectory_average_inputs(trajectory_line_segments=trajectory_line_segments, \
+                                                          min_prev_dist=min_prev_dist, min_lines=min_vertical_lines)
+    out = []
+    for line_seg_averaging_input in inputs:
+        vert_val = get_mean_vertical_coordinate_in_line_segments(line_seg_averaging_input)
+        out.append(Point(line_seg_averaging_input['horizontal_pos'], vert_val))
+    return out
 
 def interpolate_within_line_segment(line_segment, horizontal_coordinate):
     min_x = min(line_segment.start.x, line_segment.end.x)

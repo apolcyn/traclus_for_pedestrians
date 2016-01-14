@@ -10,7 +10,7 @@ from traclus_dbscan.traclus_dbscan import TrajectoryLineSegment
 from representative_trajectory_average_inputs import DECIMAL_MAX_DIFF_FOR_EQUALITY
 
 class UnitBaseTests(unittest.TestCase):
-    def create_trajectory_line_seg(self, start, end, traj_id, original_position):
+    def create_trajectory_line_seg(self, start, end, traj_id, original_position=None):
         return TrajectoryLineSegment(LineSegment.from_points([Point(start[0], start[1]), \
                                                               Point(start[0], start[1])]), traj_id, original_position)
         
