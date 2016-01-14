@@ -14,7 +14,7 @@ def get_representative_line_from_trajectory_line_segments(trajectory_line_segmen
     out = []
     for line_seg_averaging_input in inputs:
         vert_val = get_mean_vertical_coordinate_in_line_segments(line_seg_averaging_input)
-        out.append(Point(line_seg_averaging_input['horizontal_pos'], vert_val))
+        out.append(Point(line_seg_averaging_input['horizontal_position'], vert_val))
     return out
 
 def interpolate_within_line_segment(line_segment, horizontal_coordinate):
@@ -37,7 +37,7 @@ def line_segment_averaging_set_iterable(line_segments_to_average):
     def generator(line_segments_group=line_segments_to_average):
         horizontal_coord = line_segments_group['horizontal_position']
         for seg in line_segments_group['lines']:
-            yield {'horizontal_pos': horizontal_coord, 'line_seg': seg}
+            yield {'horizontal_pos': horizontal_coord, 'line_seg': seg.line_segment}
     
     return GeneratorInitializer(generator)
 

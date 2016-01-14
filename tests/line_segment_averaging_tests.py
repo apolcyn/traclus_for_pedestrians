@@ -9,6 +9,8 @@ from line_segment_averaging import number_average,\
 from linked_list import LinkedList
 from tests import unit_base_tests
 from line_segment_averaging import get_mean_vertical_coordinate_in_line_segments
+from traclus_dbscan.traclus_dbscan import TrajectoryLineSegment,\
+    TrajectoryLineSegmentFactory
 
 def simple_func(num):
     return num
@@ -32,7 +34,7 @@ class LineSegmentAveragingTest(unit_base_tests.UnitBaseTests):
         test_ob = {'horizontal_position':3, 'lines': [] }
         for line in lines:
             test_ob['lines'].append(line)
-        expected = map(lambda seg: {'horizontal_pos':3, 'line_seg': seg }, lines)
+        expected = map(lambda seg: {'horizontal_pos':3, 'line_seg': seg.line_segment }, lines)
         
         self.verify_iterable_works_more_than_once(line_segment_averaging_set_iterable(test_ob), expected)
         
@@ -45,7 +47,9 @@ class LineSegmentAveragingTest(unit_base_tests.UnitBaseTests):
                  self.create_simple_line_seg((0, 2), (1, 3)), \
                  self.create_simple_line_seg((0, 3), (1, 4)), \
                  self.create_simple_line_seg((0, 4), (1, 5))]
-        test_ob = {'lines': lines, 'horizontal_position': 0.5}
+        traj_seg_factory = TrajectoryLineSegmentFactory()
+        test_ob = {'lines': map(lambda x: traj_seg_factory.new_trajectory_line_seg(x, 0), lines), \
+                   'horizontal_position': 0.5}
         self.assertEquals(get_mean_vertical_coordinate_in_line_segments(test_ob), 3.0)
         
     def test_line_segment_averaging_empty_input(self):

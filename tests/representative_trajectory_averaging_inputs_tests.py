@@ -9,7 +9,6 @@ from representative_trajectory_average_inputs import get_representative_trajecto
 from traclus_dbscan.traclus_dbscan import TrajectoryLineSegment
 from planar import Point
 from planar.line import LineSegment
-from unittest import TestSuite
 import random
 
 class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
