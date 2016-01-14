@@ -14,10 +14,12 @@ class FindRepresentativeLineSegmentsTest(UnitBaseTests):
         pass
     
     def test_simple_lines(self):
-        traj_line_segments = [self.create_trajectory_line_seg((0.0, 0.0), (1.0, 0.0), 0), \
+        traj_line_segments = [self.create_trajectory_line_seg(start=(0.0, 0.0), end=(1.0, 0.0), traj_id=0), \
                          self.create_trajectory_line_seg(start=(0.0, 1.0), end=(1.0, 1.0), traj_id=1)]
         res = get_representative_line_from_trajectory_line_segments(traj_line_segments, 1, 0)
         expected = [Point(0, 0.5), Point(1, 0.5)]
+        for p in res:
+            self.assertEquals(p.__class__, Point)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_three_lines(self):
@@ -25,7 +27,7 @@ class FindRepresentativeLineSegmentsTest(UnitBaseTests):
                               self.create_trajectory_line_seg(start=(0.0, 1.0), end=(2.0, 1.0), traj_id=2), \
                               self.create_trajectory_line_seg(start=(0.0, 2.0), end=(2.0, 2.0), traj_id=1)]
         res = get_representative_line_from_trajectory_line_segments(traj_line_segments, 1, 0)
-        expected = [Point(0, 0.5), Point(1, 0.5)]
+        expected = [Point(0, 1), Point(2, 1)]
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
 if __name__ == "__main__":

@@ -51,6 +51,9 @@ class RepresentativeLineSegIterableFromAllPointsIterableTest(UnitBaseTests):
                                                               get_representative_line_seg_from_trajectory_caller=self.mock_get_representative_line_seg_from_trajectory_caller, 
                                                               min_num_trajectories_in_cluster=9)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
+        
+    def test_caller_func(self):
+        pass
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

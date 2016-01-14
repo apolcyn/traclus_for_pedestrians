@@ -17,9 +17,8 @@ def the_whole_enchilada(point_iterable_list, epsilon, min_neighbors, min_num_tra
     def _dbscan_caller(cluster_candidates):
         return dbscan(cluster_candidates=cluster_candidates, epsilon=epsilon, min_neighbors=min_neighbors, \
                       cluster_factory=TrajectoryClusterFactory())
-    all_traj_segs_iter_from_all_points_caller= \
-    get_all_trajectory_line_segments_iterable_from_all_points_iterable_caller(trajectory_line_segment_func=get_all_trajectory_line_segments_iterable_from_all_points_iterable,\
-                                                                              get_line_segs_from_points_func=get_trajectory_line_segments_from_points_iterable, \
+    all_traj_segs_iter_from_all_points_caller = \
+    get_all_trajectory_line_segments_iterable_from_all_points_iterable_caller(get_line_segs_from_points_func=get_trajectory_line_segments_from_points_iterable, \
                                                                               trajectory_line_segment_factory=trajectory_line_segment_factory, \
                                                                               trajectory_partitioning_func=call_partition_trajectory, \
                                                                               line_seg_from_points_func=get_line_segment_from_points)
@@ -49,10 +48,7 @@ def representative_line_seg_iterable_from_all_points_iterable(point_iterable_lis
                                                               get_cluster_iterable_from_all_points_iterable_caller, \
                                                               get_representative_line_seg_from_trajectory_caller, 
                                                               min_num_trajectories_in_cluster):
-    def _func(point_iterable_list=point_iterable_list, \
-              get_cluster_iterable_from_all_points_iterable_caller=get_cluster_iterable_from_all_points_iterable_caller, \
-              get_representative_line_seg_from_trajectory_caller=get_representative_line_seg_from_trajectory_caller, \
-              min_num_trajectories_in_cluster=min_num_trajectories_in_cluster):
+    def _func():
         clusters = get_cluster_iterable_from_all_points_iterable_caller(point_iterable_list)
         for traj_cluster in clusters:
             if traj_cluster.num_trajectories_contained() >= min_num_trajectories_in_cluster:
@@ -64,8 +60,7 @@ def get_cluster_iterable_from_all_points_iterable(point_iterable_list,  get_all_
                                                   dbscan_caller):
     return GeneratorInitializer(dbscan_caller, get_all_traj_segs_from_all_points_caller(point_iterable_list))
     
-def get_all_trajectory_line_segments_iterable_from_all_points_iterable_caller(trajectory_line_segment_func, \
-                                                                       get_line_segs_from_points_func, \
+def get_all_trajectory_line_segments_iterable_from_all_points_iterable_caller(get_line_segs_from_points_func, \
                                               trajectory_line_segment_factory, trajectory_partitioning_func, \
                                               line_seg_from_points_func):
     def _func(point_iterable_list):

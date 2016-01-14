@@ -17,6 +17,7 @@ class JumboShrimpTest(UnitBaseTests):
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=100, min_neighbors=1, min_num_trajectories_in_cluster=1, min_vertical_lines=2, min_prev_dist=1.0)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
+        self.assertEquals(1, 2)
 
 
 if __name__ == "__main__":
