@@ -55,7 +55,7 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
                 self.assertTrue(line in expected_line_sets[i]['lines'])
             self.assertAlmostEquals(averaging_input['horizontal_position'], \
                                     expected_line_sets[i]['horizontal_position'], 11, DECIMAL_MAX_DIFF_FOR_EQUALITY)
-                    
+                                
     def test_line_seg_endpoint_sorting(self):
         lines = [self.create_line(0.0, 2.0, [0, 1, 2], 0), \
             self.create_line(1.0, 3.0, [1, 2, 3], 1), \
@@ -70,6 +70,42 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
         for i in range(0, len(actual)):
             self.assertAlmostEquals(expected[i], actual[i].horizontal_position, 11, DECIMAL_MAX_DIFF_FOR_EQUALITY)
             
+    def test_two_short_lines(self):
+        lines = [self.create_line(0.0, 1.0, [0, 1], 0), \
+            self.create_line(0.0, 1.0, [0, 1], 1)]
+        line_sets = [self.create_line_set(0.0), \
+            self.create_line_set(1.0)]
+        self.verify(self.build_test_ob(lines,line_sets, 1)) 
+        
+    def test_two_short_line_endpoints_get_picked(self):
+        lines = [LineSegment.from_points([Point(0, 0), Point(1, 0)]), \
+                 LineSegment.from_points([Point(0, 1), Point(1, 1)])]
+        traj_lines = [TrajectoryLineSegment(lines[0], 0), \
+                      TrajectoryLineSegment(lines[1], 1)]
+        res = get_representative_trajectory_average_inputs(trajectory_line_segments=traj_lines, \
+                                                          min_prev_dist=1, min_lines=2)  
+        expected = 2
+        self.assertEquals(len(res), expected)
+        
+    def test_three_line_sets_should_result(self):
+        lines = [LineSegment.from_points([Point(0, 0), Point(1, 0)]), \
+                 LineSegment.from_points([Point(0.5, 1), Point(1.0, 1)])]
+        traj_lines = [TrajectoryLineSegment(lines[0], 0), \
+                      TrajectoryLineSegment(lines[1], 1)]
+        res = get_representative_trajectory_average_inputs(trajectory_line_segments=traj_lines, \
+                                                          min_prev_dist=0.5, min_lines=1)  
+        expected = 3
+        self.assertEquals(len(res), expected)
+        
+    def test_four_line_sets_should_result(self):
+        lines = [LineSegment.from_points([Point(0, 0), Point(1, 0)]), \
+                 LineSegment.from_points([Point(0.5, 1), Point(1.5, 1)])]
+        traj_lines = [TrajectoryLineSegment(lines[0], 0), \
+                      TrajectoryLineSegment(lines[1], 1)]
+        res = get_representative_trajectory_average_inputs(trajectory_line_segments=traj_lines, \
+                                                          min_prev_dist=0.5, min_lines=1)  
+        expected = 4
+        self.assertEquals(len(res), expected)
         
     def test_overlapping_one_line_required(self):  
         lines = [self.create_line(0.0, 2.0, [0, 1, 2], 0), \
