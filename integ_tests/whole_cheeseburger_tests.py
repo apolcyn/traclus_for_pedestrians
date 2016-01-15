@@ -49,19 +49,19 @@ class JumboShrimpTest(UnitBaseTests):
         points = [[Point(0, 1), Point(2, 1), Point(4, 1)], \
                   [Point(0, 0), Point(2, 0), Point(4, 0)], \
                   [Point(0, 3), Point(2, 3), Point(4, 3)]]
-        expected = [[Point(0, 0.5), Point(2, 0.5), Point(4, 0.5)], \
-                  [Point(0, 3), Point(2, 3), Point(4, 3)]]
+        expected = [[Point(0, 0.5), Point(4, 0.5)], \
+                  [Point(0, 3), Point(4, 3)]]
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=1, min_neighbors=0, min_num_trajectories_in_cluster=1, min_vertical_lines=1, min_prev_dist=1.0)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_one_long_line_joins_two_short_lines(self):
-        points = [[Point(0, 1), Point(2, 1), Point(4, 1), Point(6, 1), Point(8, 1)], \
-                  [Point(0, 0), Point(2, 0)], \
-                  [Point(6, 2), Point(8, 2)]]
-        expected = [[Point(0, 0.5), Point(2, 0.5), Point(6, 1.5), Point(8, 1.5)]]
+        points = [[Point(0, 1), Point(20, 1), Point(40, 1), Point(60, 1), Point(80, 1)], \
+                  [Point(0, 0), Point(20, 0)], \
+                  [Point(60, 2), Point(80, 2)]]
+        expected = [[Point(0, 0.5), Point(20, 0.5), Point(60, 1.5), Point(80, 1.5)]]
         res = the_whole_enchilada(point_iterable_list=points, \
-                                  epsilon=2, min_neighbors=3, min_num_trajectories_in_cluster=3, min_vertical_lines=1, min_prev_dist=1.0)
+                                  epsilon=1, min_neighbors=2, min_num_trajectories_in_cluster=3, min_vertical_lines=2, min_prev_dist=10.0)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_two_45_degree_line_segments(self):
@@ -97,8 +97,8 @@ class JumboShrimpTest(UnitBaseTests):
         points = [[Point(0, 0), Point(10, 10), Point(20, 20), Point(30, 30)]]
         expected = [[Point(0, 0), Point(30, 30)]]
         res = the_whole_enchilada(point_iterable_list=points, \
-                                  epsilon=math.sqrt(2.0) + DECIMAL_MAX_DIFF_FOR_EQUALITY, \
-                                  min_neighbors=1, min_num_trajectories_in_cluster=1, \
+                                  epsilon=0, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
                                   min_vertical_lines=1, \
                                   min_prev_dist=math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
@@ -107,20 +107,20 @@ class JumboShrimpTest(UnitBaseTests):
         points = [[Point(0, 0), Point(100, 10), Point(200, 20), Point(300, 30)]]
         expected = [[Point(0, 0), Point(300, 30)]]
         res = the_whole_enchilada(point_iterable_list=points, \
-                                  epsilon=1000, \
-                                  min_neighbors=0, min_num_trajectories_in_cluster=0, \
-                                  min_vertical_lines=0, \
-                                  min_prev_dist=0)
+                                  epsilon=0, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
         
     def test_three_points_in_a_row_negative_diagonal(self):
-        points = [[Point(0, 2), Point(1, 1), Point(2, 0)]]
-        expected = [[Point(0, 2), Point(2, 0)]]
+        points = [[Point(0, 20), Point(10, 10), Point(20, 0)]]
+        expected = [[Point(0, 20), Point(20, 0)]]
         res = the_whole_enchilada(point_iterable_list=points, \
-                                  epsilon=math.sqrt(2.0) + DECIMAL_MAX_DIFF_FOR_EQUALITY, \
-                                  min_neighbors=1, min_num_trajectories_in_cluster=1, \
+                                  epsilon=0, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
                                   min_vertical_lines=1, \
-                                  min_prev_dist=math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY)
+                                  min_prev_dist=(2 * math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY))
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
         
     def test_parrallel_distance_joins_two_lines_segs(self):
@@ -138,10 +138,10 @@ class JumboShrimpTest(UnitBaseTests):
         points = [[Point(0, 0), Point(2, 0), Point(4, 0)]]
         expected = [[Point(0, 0), Point(4, 0)]]
         res = the_whole_enchilada(point_iterable_list=points, \
-                                  epsilon=0.00001, \
-                                  min_neighbors=2, min_num_trajectories_in_cluster=1, \
+                                  epsilon=0, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
                                   min_vertical_lines=1, \
-                                  min_prev_dist=2)
+                                  min_prev_dist=4)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
         
