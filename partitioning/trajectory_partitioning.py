@@ -16,9 +16,11 @@ def call_partition_trajectory(trajectory_point_list):
         raise ValueError("didn't provide a trajectory with enough points")
     
     cum_dist_getter_func = \
-    cummulative_distance_function_getter_adapter(individual_distance_func=lambda x, y: \
-                                                                             perpendicular_distance(x, y) + \
+    cummulative_distance_function_getter_adapter(perp_distance_func=lambda x, y: perpendicular_distance(x, y), \
+                                                                             angle_distance_func=lambda x, y: \
                                                                              angular_distance(x, y), \
+                                                                             accumulator_wrapper=lambda x: \
+                                                                             0 if x == 0 else math.log(x, 2), \
                                                                              accumulator_func_getter=get_number_list_reducer_that_returns_each_midway_val)
 
     partition_from_index_getter = get_partition_from_index_creator(get_line_segment_from_points)
@@ -41,16 +43,23 @@ def call_partition_trajectory(trajectory_point_list):
 def get_model_cost_computer(individual_line_segment_cost_computer):
     return get_number_list_reducer_that_returns_each_midway_val(func=individual_line_segment_cost_computer)
 
-def cummulative_distance_function_getter_adapter(individual_distance_func, accumulator_func_getter):
+def cummulative_distance_function_getter_adapter(perp_distance_func, angle_distance_func, accumulator_func_getter, \
+                                                 accumulator_wrapper):
     def _func():
-        return cummulative_distance_function_getter(individual_distance_func=individual_distance_func, \
+        return cummulative_distance_function_getter(perp_distance_func=perp_distance_func, \
+                                                    angle_distance_func=angle_distance_func, \
+                                                    accumulator_wrapper=accumulator_wrapper, \
                                                     accumulator_func_getter=accumulator_func_getter)
     return _func
         
-def cummulative_distance_function_getter(individual_distance_func, accumulator_func_getter):
-    accumulator_func = accumulator_func_getter(lambda x: x)
+def cummulative_distance_function_getter(perp_distance_func, angle_distance_func, accumulator_func_getter, \
+                                         accumulator_wrapper):
+    perp_dist_accumulator_func = accumulator_func_getter(lambda x: x)
+    angle_dist_accumulator_func = accumulator_func_getter(lambda x: x)
+
     def _distance_func(line_a, line_b):
-        return accumulator_func(individual_distance_func(line_a, line_b))
+        return accumulator_wrapper(perp_dist_accumulator_func(perp_distance_func(line_a, line_b))) + \
+            accumulator_wrapper(angle_dist_accumulator_func(angle_distance_func(line_a, line_b)))
     return _distance_func
         
 def get_number_list_reducer_that_returns_each_midway_val(func):

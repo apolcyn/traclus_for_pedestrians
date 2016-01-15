@@ -64,7 +64,13 @@ class SimpleLinePartitioningIntegTest(UnitBaseTests):
         traj = [Point(0, 0), Point(10, 10), Point(20, 20)]
         expected_par = [0, 2]
         self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
-                                                  expected_par)        
+                                                  expected_par)   
+        
+    def test_three_points_in_a_row_diagonal_shorter(self):
+        traj = [Point(0, 0), Point(1, 1), Point(2, 2)]
+        expected_par = [0, 2]
+        self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
+                                                  expected_par)       
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
