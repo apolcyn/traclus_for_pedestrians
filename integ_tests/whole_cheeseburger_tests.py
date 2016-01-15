@@ -155,6 +155,26 @@ class JumboShrimpTest(UnitBaseTests):
                                   min_prev_dist=1)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
         
+    def test_three_vertical_points_in_a_row_small_spacing(self):
+        points = [[Point(0, 0), Point(0, 1.1), Point(0, 2.2)]]
+        expected = [[Point(0, 0), Point(0, 2.2)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_three_vertical_points_in_a_row_sub_two_dist(self):
+        points = [[Point(0, 0), Point(0, 2), Point(0, 4)]]
+        expected = [[Point(0, 0), Point(0, 4)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
     def test_single_line_seg(self):
         points = [[Point(0, 0), Point(2, 0)]]
         expected = [[Point(0, 0), Point(2, 0)]]

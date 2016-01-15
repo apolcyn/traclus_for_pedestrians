@@ -44,10 +44,11 @@ class SimpleLinePartitioningIntegTest(UnitBaseTests):
         self.assertRaises(ValueError, call_partition_trajectory, [])
         
     def test_three_points_horizontal(self):
-        traj = [Point(0, 0), Point(1.00000001, 0), Point(2.0000002, 0)]
+        traj = [Point(0, 0), Point(1.6, 0), Point(4.4, 0)]
         expected_par = [0, 2]
         self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
                                                   expected_par)  
+        
     def test_three_points_horizontal_2_spacing(self):
         traj = [Point(0, 0), Point(2, 0), Point(4, 0)]
         expected_par = [0, 2]
@@ -62,6 +63,12 @@ class SimpleLinePartitioningIntegTest(UnitBaseTests):
         
     def test_three_points_in_a_row_diagonal(self):
         traj = [Point(0, 0), Point(10, 10), Point(20, 20)]
+        expected_par = [0, 2]
+        self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
+                                                  expected_par)   
+        
+    def test_three_points_in_a_row_diagonal_shorter_real_short(self):
+        traj = [Point(0, 0), Point(0.2, 0.2), Point(0.4, 0.4)]
         expected_par = [0, 2]
         self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
                                                   expected_par)   

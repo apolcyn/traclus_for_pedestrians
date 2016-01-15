@@ -20,7 +20,7 @@ def call_partition_trajectory(trajectory_point_list):
                                                                              angle_distance_func=lambda x, y: \
                                                                              angular_distance(x, y), \
                                                                              accumulator_wrapper=lambda x: \
-                                                                             0 if x == 0 else math.log(x, 2), \
+                                                                             -(math.pow(2, 32) - 1) if x == 0 else math.log(x, 2), \
                                                                              accumulator_func_getter=get_number_list_reducer_that_returns_each_midway_val)
 
     partition_from_index_getter = get_partition_from_index_creator(get_line_segment_from_points)
@@ -70,9 +70,9 @@ def get_number_list_reducer_that_returns_each_midway_val(func):
     return _func
     
 def individual_line_seg_model_cost_computer(line_seg):
-    if line_seg.length <= 1.0:
+    if line_seg.length == 0.0:
         raise ValueError
-    return math.ceil(math.log(line_seg.length, 2))
+    return math.log(line_seg.length, 2)
 
 def get_partition_from_index_creator(line_segment_from_point_getter):
     def _func(list, low, high):
