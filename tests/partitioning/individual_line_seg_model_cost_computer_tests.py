@@ -25,7 +25,7 @@ class IndividualLineSegModelCostComputerTest(UnitBaseTests):
         self.assertEquals(individual_line_seg_model_cost_computer(line_seg), 1) 
         
         line_seg = self.create_simple_line_seg(start=(2, 3), end=(2, 4))
-        self.assertEquals(individual_line_seg_model_cost_computer(line_seg), 0) 
+        self.assertRaises(ValueError, individual_line_seg_model_cost_computer, line_seg) 
         
     def test_get_cost_bad_inputs(self):
         line_seg = self.create_simple_line_seg(start=(2, 3), end=(2, 3.99999))
@@ -33,7 +33,9 @@ class IndividualLineSegModelCostComputerTest(UnitBaseTests):
 
         line_seg = self.create_simple_line_seg(start=(2, 3), end=(2, 3))
         self.assertRaises(ValueError, individual_line_seg_model_cost_computer, line_seg) 
-        pass
+        
+        line_seg = self.create_simple_line_seg(start=(2, 3), end=(2, 4))
+        self.assertRaises(ValueError, individual_line_seg_model_cost_computer, line_seg) 
 
 
 if __name__ == "__main__":

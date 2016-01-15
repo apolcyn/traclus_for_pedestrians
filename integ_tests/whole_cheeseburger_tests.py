@@ -20,6 +20,8 @@ class JumboShrimpTest(UnitBaseTests):
             count = 0
             for point in rep_line_seg:
                 self.assertTrue(count < len(expected_list[total_count]))
+                self.assertAlmostEquals(point.x, expected_list[total_count][count].x, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
+                self.assertAlmostEquals(point.y, expected_list[total_count][count].y, delta=DECIMAL_MAX_DIFF_FOR_EQUALITY)
                 self.assertTrue(point.almost_equals(expected_list[total_count][count]))
                 count += 1
             self.assertEquals(count, len(expected_list[total_count]))
@@ -44,20 +46,20 @@ class JumboShrimpTest(UnitBaseTests):
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_three_by_three_two_clusters(self):
-        points = [[Point(0, 1), Point(1, 1), Point(2, 1)], \
-                  [Point(0, 0), Point(1, 0), Point(2, 0)], \
-                  [Point(0, 3), Point(1, 3), Point(2, 3)]]
-        expected = [[Point(0, 0.5), Point(1, 0.5), Point(2, 0.5)], \
-                  [Point(0, 3), Point(1, 3), Point(2, 3)]]
+        points = [[Point(0, 1), Point(2, 1), Point(4, 1)], \
+                  [Point(0, 0), Point(2, 0), Point(4, 0)], \
+                  [Point(0, 3), Point(2, 3), Point(4, 3)]]
+        expected = [[Point(0, 0.5), Point(2, 0.5), Point(4, 0.5)], \
+                  [Point(0, 3), Point(2, 3), Point(4, 3)]]
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=1, min_neighbors=0, min_num_trajectories_in_cluster=1, min_vertical_lines=1, min_prev_dist=1.0)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_one_long_line_joins_two_short_lines(self):
-        points = [[Point(0, 1), Point(1, 1), Point(2, 1), Point(3, 1), Point(4, 1)], \
-                  [Point(0, 0), Point(1, 0)], \
-                  [Point(3, 2), Point(4, 2)]]
-        expected = [[Point(0, 0.5), Point(1, 2.0/3), Point(2, 1), Point(3, 4.0/3), Point(4, 1.5)]]
+        points = [[Point(0, 1), Point(2, 1), Point(4, 1), Point(6, 1), Point(8, 1)], \
+                  [Point(0, 0), Point(2, 0)], \
+                  [Point(6, 2), Point(8, 2)]]
+        expected = [[Point(0, 0.5), Point(2, 0.5), Point(6, 1.5), Point(8, 1.5)]]
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=2, min_neighbors=3, min_num_trajectories_in_cluster=3, min_vertical_lines=1, min_prev_dist=1.0)
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
@@ -75,7 +77,7 @@ class JumboShrimpTest(UnitBaseTests):
     def test_two_vertical_line_segments(self):
         points = [[Point(0, 0), Point(0, 1)], \
                   [Point(1, 0), Point(1, 1)]]
-        expected = [[Point(0.5, 0.0), (0.5, 1)]]
+        expected = [[Point(0.5, 0.0), Point(0.5, 1)]]
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=100, min_neighbors=0, min_num_trajectories_in_cluster=1, min_vertical_lines=1, min_prev_dist=0)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
@@ -91,14 +93,76 @@ class JumboShrimpTest(UnitBaseTests):
                                   min_prev_dist=math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
         
-    def test_partition_happens_with_single_long_line_seg(self):
-        points = [[Point(0, 0), Point(1, 1), Point(2, 2), Point(3, 3)]]
-        expected = [[Point(0, 0), Point(3, 3)]]
+    def test_four_points_in_a_row_diagonally(self):
+        points = [[Point(0, 0), Point(10, 10), Point(20, 20), Point(30, 30)]]
+        expected = [[Point(0, 0), Point(30, 30)]]
         res = the_whole_enchilada(point_iterable_list=points, \
                                   epsilon=math.sqrt(2.0) + DECIMAL_MAX_DIFF_FOR_EQUALITY, \
                                   min_neighbors=1, min_num_trajectories_in_cluster=1, \
                                   min_vertical_lines=1, \
                                   min_prev_dist=math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_four_points_in_a_row_slight_diagonally(self):
+        points = [[Point(0, 0), Point(100, 10), Point(200, 20), Point(300, 30)]]
+        expected = [[Point(0, 0), Point(300, 30)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1000, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=0, \
+                                  min_vertical_lines=0, \
+                                  min_prev_dist=0)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_three_points_in_a_row_negative_diagonal(self):
+        points = [[Point(0, 2), Point(1, 1), Point(2, 0)]]
+        expected = [[Point(0, 2), Point(2, 0)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=math.sqrt(2.0) + DECIMAL_MAX_DIFF_FOR_EQUALITY, \
+                                  min_neighbors=1, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=math.sqrt(2.0) - DECIMAL_MAX_DIFF_FOR_EQUALITY)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_parrallel_distance_joins_two_lines_segs(self):
+        points = [[Point(0, 0), Point(1, 0)], \
+                  [Point(2, 0), Point(3, 0)]]
+        expected = [[Point(0, 0), Point(1, 0), Point(2, 0), Point(3, 0)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1, \
+                                  min_neighbors=1, min_num_trajectories_in_cluster=2, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+
+    def test_partition_happens_with_three_points_in_a_row_horizontally(self):
+        points = [[Point(0, 0), Point(2, 0), Point(4, 0)]]
+        expected = [[Point(0, 0), Point(4, 0)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=0.00001, \
+                                  min_neighbors=2, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=2)
+        self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_three_vertical_points_in_a_row(self):
+        points = [[Point(0, 0), Point(0, 2), Point(0, 4)]]
+        expected = [[Point(0, 0), Point(0, 4)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_single_line_seg(self):
+        points = [[Point(0, 0), Point(2, 0)]]
+        expected = [[Point(0, 0), Point(2, 0)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=1, \
+                                  min_neighbors=0, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
 
 if __name__ == "__main__":

@@ -17,6 +17,9 @@ class RepresentativeLineSegIterableFromAllPointsIterableTest(UnitBaseTests):
         def num_trajectories_contained(self):
             return self.num_traj_contained
         
+        def get_trajectory_line_segments(self):
+            return self.trajectories
+        
     def mock_get_representative_line_seg_from_trajectory_caller(self, trajectories):
         return trajectories
     

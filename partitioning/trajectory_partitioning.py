@@ -61,7 +61,7 @@ def get_number_list_reducer_that_returns_each_midway_val(func):
     return _func
     
 def individual_line_seg_model_cost_computer(line_seg):
-    if line_seg.length < 1.0:
+    if line_seg.length <= 1.0:
         raise ValueError
     return math.ceil(math.log(line_seg.length, 2))
 
