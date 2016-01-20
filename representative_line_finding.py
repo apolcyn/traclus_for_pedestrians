@@ -14,7 +14,10 @@ def get_average_vector(line_segment_list):
     total_y = 0.0
     
     for segment in line_segment_list:
-        total_x += segment.end.x - segment.start.x
+        if segment.end.x < segment.start.x:
+            total_x += segment.start.x - segment.end.x
+        else:
+            total_x += segment.end.x - segment.start.x
         total_y += segment.end.y - segment.start.y
         
     return Vec2(total_x, total_y)

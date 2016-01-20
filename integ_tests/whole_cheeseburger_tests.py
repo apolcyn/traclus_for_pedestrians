@@ -184,6 +184,26 @@ class JumboShrimpTest(UnitBaseTests):
                                   min_vertical_lines=1, \
                                   min_prev_dist=1)
         self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_normal_turning_line(self):
+        points = [[Point(0, 0), Point(20, 20), Point(40, 0), Point(60, 20), Point(80, 0)]]
+        expected = [[Point(0, 0), Point(20, 20), Point(40, 0), Point(60, 20), Point(80, 0)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=100, \
+                                  min_neighbors=3, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=1)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
+        
+    def test_trajectory_loops_around(self):
+        points = [[Point(0, 1000.0), Point(1000.0, 2000.0), Point(2000.0, 1000.0), Point(1000.0, 0), Point(0, 1000.0)]]
+        expected = [[Point(0, 1000), Point(1000, 1000), Point(2000, 1000)]]
+        res = the_whole_enchilada(point_iterable_list=points, \
+                                  epsilon=3000, \
+                                  min_neighbors=3, min_num_trajectories_in_cluster=1, \
+                                  min_vertical_lines=1, \
+                                  min_prev_dist=10)
+        self.verify_point_iterable_almost_equals_list(iterable=res, expected_list=expected)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

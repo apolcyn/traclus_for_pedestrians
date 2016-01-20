@@ -17,10 +17,16 @@ class RepresentativeLineFindingTests(UnitBaseTests):
                  self.create_simple_line_seg((1, 1), (3, -7)), \
                  self.create_simple_line_seg((1, 0), (-4, 4)), \
                  self.create_simple_line_seg((4, 2), (1, -3))]
-        self.assertEquals(get_average_vector(lines), Vec2(-5, -8))
+        self.assertEquals(get_average_vector(lines), Vec2(11, -8))
         self.assertEquals(get_average_vector([self.create_simple_line_seg((0, 1), (2, 9))]), Vec2(2, 8))
-
         
+    def test_gets_average_vector_of_diamond(self):
+        lines = [self.create_simple_line_seg((0, 100), (100, 200)), \
+                 self.create_simple_line_seg((100, 200), (200, 100)), \
+                 self.create_simple_line_seg((200, 100), (100, 0)), \
+                 self.create_simple_line_seg((100, 0), (0, 100))]
+        self.assertEquals(get_average_vector(lines), Vec2(400, 0))
+
     def test_get_average_vector_empty_input(self):
         self.assertRaises(Exception, get_average_vector, [])
         self.assertRaises(Exception, get_average_vector, None)

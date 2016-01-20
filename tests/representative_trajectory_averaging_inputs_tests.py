@@ -120,6 +120,16 @@ class RepresentativeTrajectoryAverageInputsTest(unittest.TestCase):
             self.create_line_set(5.0)]
         self.verify(self.build_test_ob(lines,line_sets, 1))
         
+    def test_trajectory_goes_forward_and_backwards_horizontally(self):  
+        lines = [self.create_line(0, 100, [0, 1], 0), \
+            self.create_line(100, 200, [1, 2], 0), \
+            self.create_line(200, 100, [1, 2], 0), \
+            self.create_line(100, 0, [0, 1], 0)]
+        line_sets = [self.create_line_set(0.0), \
+            self.create_line_set(100.0), \
+            self.create_line_set(200.0)]
+        self.verify(self.build_test_ob(lines,line_sets, 1))
+        
     def test_two_lines_required(self):
         lines = [self.create_line(0.0, 2.0, [0, 1], 0), \
             self.create_line(1.0, 3.0, [0, 1, 2], 1), \

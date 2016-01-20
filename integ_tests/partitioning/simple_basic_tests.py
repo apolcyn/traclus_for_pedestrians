@@ -77,7 +77,19 @@ class SimpleLinePartitioningIntegTest(UnitBaseTests):
         traj = [Point(0, 0), Point(1, 1), Point(2, 2)]
         expected_par = [0, 2]
         self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
-                                                  expected_par)       
+                                                  expected_par)  
+        
+    def test_doesnt_partition_diamond(self):
+        traj = [Point(0, 10), Point(10, 20), Point(20, 10), Point(10, 0), Point(0, 10)]     
+        expected_par = [0, 1, 2, 3, 4]
+        self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
+                                            expected_par) 
+        
+    def test_doesnt_partition_big_diamond(self):
+        traj = [Point(0, 100), Point(100, 200), Point(200, 100), Point(100, 0), Point(0, 100)]     
+        expected_par = [0, 1, 2, 3, 4]
+        self.verify_iterable_works_more_than_once(call_partition_trajectory(trajectory_point_list=traj), \
+                                            expected_par) 
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
