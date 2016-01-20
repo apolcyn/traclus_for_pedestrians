@@ -29,12 +29,10 @@ class Test(UnitBaseTests):
         self.verify_iterable_works_more_than_once(iterable=res, list_ob=expected)
         
     def test_not_enough_input(self):
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=consecutive_item_func_iterator_getter(consecutive_item_func=self.mock_consec_items_func, \
-                                                     item_iterable=[4]))
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=consecutive_item_func_iterator_getter(consecutive_item_func=self.mock_consec_items_func, \
-                                                     item_iterable=[]))
+        self.assertRaises(ValueError, \
+                                     consecutive_item_func_iterator_getter, self.mock_consec_items_func, [4])
+        self.assertRaises(ValueError, \
+                                     consecutive_item_func_iterator_getter, self.mock_consec_items_func, [])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

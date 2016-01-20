@@ -4,7 +4,6 @@ Created on Jan 5, 2016
 @author: Alex
 '''
 
-from generator_initializer import GeneratorInitializer
 from representative_trajectory_average_inputs import get_representative_trajectory_average_inputs,\
     DECIMAL_MAX_DIFF_FOR_EQUALITY
 from planar import Point

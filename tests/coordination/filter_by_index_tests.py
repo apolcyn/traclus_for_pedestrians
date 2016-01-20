@@ -26,25 +26,21 @@ class IndexFilteringTest(UnitBaseTests):
     def test_single_value_case(self):
         indices = [0]
         vals = ['a']
-        self.verify_iteration_raises(ValueError, filter_by_indices(good_indices=indices, vals=vals))
+        self.assertRaises(ValueError, filter_by_indices, indices, vals)
         
     def test_indices_too_high(self):
         indices = [0, 3, 5]
         vals = ['a', 'b', 'c', 'd', 'e']
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=filter_by_indices(good_indices=indices, vals=vals))
+        self.assertRaises(ValueError, filter_by_indices, indices, vals)
         
     def test_nonzero_first_index(self):
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=filter_by_indices(good_indices=[1, 3, 5], vals=[2, 4, 2, 3, 4, 5]))
+        self.assertRaises(ValueError, filter_by_indices, [1, 3, 5], [2, 4, 2, 3, 4, 5])
         
     def test_last_index_not_included(self):
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=filter_by_indices(good_indices=[0, 3, 4], vals=[2, 4, 2, 2, 3, 4]))
+        self.assertRaises(ValueError, filter_by_indices, [0, 3, 4], [2, 4, 2, 2, 3, 4])
                 
     def test_empty_input(self):
-        self.verify_iteration_raises(exception_type=ValueError, \
-                                     iterable=filter_by_indices(good_indices=[], vals=[]))
+        self.assertRaises(ValueError, filter_by_indices, [],[])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test_normal_case']

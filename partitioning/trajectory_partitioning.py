@@ -5,7 +5,6 @@ Created on Jan 7, 2016
 '''
 from planar.line import LineSegment
 from planar import Point
-from generator_initializer import GeneratorInitializer
 from distance_functions import get_total_distance_function,\
     perpendicular_distance, angular_distance, parrallel_distance
 import math

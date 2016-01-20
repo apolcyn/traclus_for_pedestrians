@@ -3,7 +3,6 @@ Created on Jan 10, 2016
 
 @author: Alex
 '''
-from generator_initializer import GeneratorInitializer
 from partitioning.trajectory_partitioning import get_line_segment_from_points,\
     call_partition_trajectory
 from generic_dbscan import dbscan
@@ -107,11 +106,12 @@ def get_trajectory_line_segments_from_points_iterable(point_iterable, trajectory
     return map(_create_traj_line_seg, line_segs)
 
 def filter_by_indices(good_indices, vals):
-    return GeneratorInitializer(_filter_by_indices, good_indices, vals)
+    return _filter_by_indices(good_indices, vals)
 
 def _filter_by_indices(good_indices, vals):
     vals_iter = iter(vals)
     good_indices_iter = iter(good_indices)
+    out_vals = []
     
     num_vals = 0
     for i in good_indices_iter:
@@ -119,7 +119,7 @@ def _filter_by_indices(good_indices, vals):
             raise ValueError("the first index should be 0, but it was " + str(i))
         else:
             for item in vals_iter:
-                yield item
+                out_vals.append(item)
                 break
             num_vals = 1
             break
@@ -132,7 +132,7 @@ def _filter_by_indices(good_indices, vals):
             num_vals += 1
             if vals_cur_index == i:
                 vals_cur_index += 1
-                yield item
+                out_vals.append(item)
                 break
             else:
                 vals_cur_index += 1
@@ -145,26 +145,27 @@ def _filter_by_indices(good_indices, vals):
     if max_good_index != num_vals - 1:
         raise ValueError("last index is " + str(max_good_index) + \
                          " but there were " + str(num_vals) + " vals")
+    return out_vals
         
 def consecutive_item_func_iterator_getter(consecutive_item_func, item_iterable):
-    def _func():
-        iterator = iter(item_iterable)
-        last_item = None
-        num_items = 0
-        for item in iterator:
-            num_items = 1
-            last_item = item
-            break
-        if num_items == 0:
-            raise ValueError("iterator doesn't have any values")
+    out_vals = []
+    iterator = iter(item_iterable)
+    last_item = None
+    num_items = 0
+    for item in iterator:
+        num_items = 1
+        last_item = item
+        break
+    if num_items == 0:
+        raise ValueError("iterator doesn't have any values")
         
-        for item in iterator:
-            num_items += 1
-            yield consecutive_item_func(last_item, item)
-            last_item = item
+    for item in iterator:
+        num_items += 1
+        out_vals.append(consecutive_item_func(last_item, item))
+        last_item = item
             
-        if num_items < 2:
-            raise ValueError("iterator didn't have at least two items")
+    if num_items < 2:
+        raise ValueError("iterator didn't have at least two items")
         
-    return GeneratorInitializer(_func)
+    return out_vals
             
