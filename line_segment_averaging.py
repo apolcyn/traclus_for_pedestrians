@@ -49,12 +49,12 @@ def interpolate_within_line_segment(line_segment, horizontal_coordinate):
             (line_segment.end.y - line_segment.start.y) + line_segment.start.y        
         
 def line_segment_averaging_set_iterable(line_segments_to_average):
-    def generator(line_segments_group=line_segments_to_average):
-        horizontal_coord = line_segments_group['horizontal_position']
-        for seg in line_segments_group['lines']:
-            yield {'horizontal_pos': horizontal_coord, 'line_seg': seg.line_segment}
+    line_segment_averaging_set = []
+    horizontal_coord = line_segments_to_average['horizontal_position']
+    for seg in line_segments_to_average['lines']:
+        line_segment_averaging_set.append({'horizontal_pos': horizontal_coord, 'line_seg': seg.line_segment})
     
-    return GeneratorInitializer(generator)
+    return line_segment_averaging_set
 
 def number_average(iter_ob, func):
     total = 0.0

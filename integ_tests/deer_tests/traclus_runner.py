@@ -12,8 +12,8 @@ if __name__ == '__main__':
     print "hello"
     file = os.path.dirname(__file__) + "\\deer_1995test.tra"
     points = read_test_file(file)
-    traj_res = the_whole_enchilada(point_iterable_list=points, epsilon=1000000000000000000, min_neighbors=0, \
-                                   min_num_trajectories_in_cluster=1, min_vertical_lines=1, min_prev_dist=0.0)
+    traj_res = the_whole_enchilada(point_iterable_list=points, epsilon=29.8, min_neighbors=3, \
+                                   min_num_trajectories_in_cluster=3, min_vertical_lines=3, min_prev_dist=0.0)
     print "heres the output: " + str(traj_res)
     print "about to print out the lines"
     for traj in traj_res:

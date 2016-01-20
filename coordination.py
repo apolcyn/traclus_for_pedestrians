@@ -48,13 +48,13 @@ def representative_line_seg_iterable_from_all_points_iterable(point_iterable_lis
                                                               get_cluster_iterable_from_all_points_iterable_caller, \
                                                               get_representative_line_seg_from_trajectory_caller, 
                                                               min_num_trajectories_in_cluster):
-    def _func():
-        clusters = get_cluster_iterable_from_all_points_iterable_caller(point_iterable_list)
-        for traj_cluster in clusters:
-            if traj_cluster.num_trajectories_contained() >= min_num_trajectories_in_cluster:
-                yield get_representative_line_seg_from_trajectory_caller(traj_cluster.get_trajectory_line_segments())
+    rep_lines = []
+    clusters = get_cluster_iterable_from_all_points_iterable_caller(point_iterable_list)
+    for traj_cluster in clusters:
+        if traj_cluster.num_trajectories_contained() >= min_num_trajectories_in_cluster:
+            rep_lines.append(get_representative_line_seg_from_trajectory_caller(traj_cluster.get_trajectory_line_segments()))
                 
-    return GeneratorInitializer(_func)
+    return rep_lines
 
 def get_cluster_iterable_from_all_points_iterable(point_iterable_list,  get_all_traj_segs_from_all_points_caller, \
                                                   dbscan_caller):
@@ -70,17 +70,6 @@ def get_all_trajectory_line_segments_iterable_from_all_points_iterable_caller(ge
                                                                            trajectory_partitioning_func=trajectory_partitioning_func, \
                                                                            line_seg_from_points_func=line_seg_from_points_func)
     return _func
-
-def _get_all_trajectory_line_segments_iterable_from_all_points_iterable(point_iterable_list, \
-                                                                       get_line_segs_from_points_func, \
-                                              trajectory_line_segment_factory, trajectory_partitioning_func, \
-                                              line_seg_from_points_func):
-    return GeneratorInitializer(_get_all_trajectory_line_segments_iterable_from_all_points_iterable, \
-                                point_iterable_list, \
-                                get_line_segs_from_points_func, \
-                                trajectory_line_segment_factory, \
-                                trajectory_partitioning_func, \
-                                line_seg_from_points_func)
 
 def get_all_trajectory_line_segments_iterable_from_all_points_iterable(point_iterable_list, \
                                                                        get_line_segs_from_points_func, \

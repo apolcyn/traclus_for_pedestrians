@@ -179,12 +179,12 @@ def get_trajectory_line_segment_iterator_adapter(iterator_getter, get_line_segme
 def get_trajectory_line_segment_iterator(list, low, high, get_line_segment_from_points_func):
     if high <= low:
         raise Exception("high must be greater than low index")
-            
-    def line_segment_generator(func=get_line_segment_from_points_func):
-        cur_pos = low
+    
+    line_segs = []
+    cur_pos = low
         
-        while cur_pos < high:
-            yield func(list[cur_pos], list[cur_pos + 1])
-            cur_pos += 1
+    while cur_pos < high:
+        line_segs.append(get_line_segment_from_points_func(list[cur_pos], list[cur_pos + 1]))
+        cur_pos += 1
             
-    return GeneratorInitializer(line_segment_generator)
+    return line_segs
