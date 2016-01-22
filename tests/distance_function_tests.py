@@ -11,6 +11,7 @@ from planar import Point
 from distance_functions import parrallel_distance, perpendicular_distance,\
     angular_distance, get_total_distance_function
 from partitioning.mutable_float import MutableFloat, MutableNumber
+from planar_line_seg_wrapper import LineSegmentWrapper
         
 class DistanceFunctionTest(unittest.TestCase):
     
@@ -21,7 +22,7 @@ class DistanceFunctionTest(unittest.TestCase):
                  'angle_dist': angle_dist, 'lines': []}
     
     def add_line(self, test_object, start_a, end_a, start_b, end_b):
-        line = LineSegment.from_points([Point(start_a, end_a), Point(start_b, end_b)])
+        line = LineSegmentWrapper(LineSegment.from_points([Point(start_a, end_a), Point(start_b, end_b)]))
         test_object['lines'].append(line)
  
     def setUp(self):

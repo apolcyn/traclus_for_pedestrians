@@ -36,7 +36,7 @@ def _perp_dist_longer_line_known(longer_line, shorter_line):
         return (math.pow(dist_a, 2) + math.pow(dist_b, 2)) / (dist_a + dist_b)
     
 def dist_func_longer_finder(dist_func, line_a, line_b):
-    if line_a.line_seg == get_longer_line(line_a, line_b):
+    if line_a.wrapped_line_seg == get_longer_line(line_a.wrapped_line_seg, line_b.wrapped_line_seg):
         return dist_func(longer_line=line_a, shorter_line=line_b)
     else:
         return dist_func(longer_line=line_b, shorter_line=line_a)
@@ -45,20 +45,21 @@ def perpendicular_distance(line_a, line_b):
     return dist_func_longer_finder(_perp_dist_longer_line_known, line_a, line_b)
 
 def _angular_dist_longer_known(longer_line, shorter_line):
-    angle_in_radians = math.radians(longer_line.direction.angle_to(shorter_line.direction))
+    angle_in_radians = math.radians(longer_line.wrapped_direction.angle_to(shorter_line.wrapped_direction))
     sine_coefficient = math.sin(angle_in_radians) 
     
-    return abs(sine_coefficient * shorter_line.length)
+    return abs(sine_coefficient * shorter_line.wrapped_line_seg.length)
 
 def angular_distance(line_a, line_b):
-    return dist_func_longer_finder(_angular_dist_longer_known(line_a, line_b))
+    return dist_func_longer_finder(_angular_dist_longer_known, line_a, line_b)
 
 def _parr_dist_longer_known(longer_line, shorter_line):
-    dist_a = dist_to_projection_point(longer_line, longer_line.line.project(shorter_line.start))
-    dist_b = dist_to_projection_point(longer_line, longer_line.line.project(shorter_line.end))
+    dist_a = dist_to_projection_point(longer_line, longer_line.wrapped_inf_line.project(shorter_line.wrapped_start))
+    dist_b = dist_to_projection_point(longer_line, longer_line.wrapped_inf_line.project(shorter_line.wrapped_end))
+    return min(dist_a, dist_b)   
     
 def parrallel_distance(line_a, line_b):
     return dist_func_longer_finder(_parr_dist_longer_known, line_a, line_b) 
     
 def dist_to_projection_point(line, proj):
-    return min(proj.distance_to(line.start), proj.distance_to(line.end))
+    return min(proj.distance_to(line.wrapped_start), proj.distance_to(line.wrapped_end))
