@@ -10,6 +10,7 @@ from distance_functions import get_total_distance_function,\
 import math
 from partitioning.mutable_float import MutableFloat
 from generator_initializer import GeneratorInitializer
+from planar_line_seg_wrapper import LineSegmentWrapper
 
 def call_partition_trajectory(trajectory_point_list):
     if len(trajectory_point_list) < 2:
@@ -170,7 +171,7 @@ def no_partition_cost_computer(trajectory_point_list, low_index, high_index, \
     return total_cost
 
 def get_line_segment_from_points(point_a, point_b):
-    return LineSegment.from_points([point_a, point_b])
+    return LineSegmentWrapper(LineSegment.from_points([point_a, point_b]))
 
 def get_trajectory_line_segment_iterator_adapter(iterator_getter, get_line_segment_from_points_func):
     def _func(list, low, high, get_line_segment_from_points_func=get_line_segment_from_points_func):

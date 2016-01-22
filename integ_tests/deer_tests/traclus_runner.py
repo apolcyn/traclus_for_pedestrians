@@ -11,7 +11,7 @@ import cProfile
 
 def run_deer_stuff():
     print "hello"
-    file = os.path.dirname(__file__) + "\\deer_1995test.tra"
+    file = os.path.dirname(__file__) + "\\deer_1995.tra"
     points = read_test_file(file)
     traj_res = the_whole_enchilada(point_iterable_list=points, epsilon=40, min_neighbors=7, \
                                    min_num_trajectories_in_cluster=2, min_vertical_lines=7, min_prev_dist=0.0)
